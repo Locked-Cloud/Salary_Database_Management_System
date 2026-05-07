@@ -93,7 +93,7 @@ public class ManagePayroll extends JFrame {
     private void loadPayrollData() {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM Payroll")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM vw_Payroll_Details")) {
 
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();

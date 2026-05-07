@@ -106,7 +106,7 @@ public class ManageSalary extends JFrame {
     private void loadSalaryData() {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM SalaryStructures")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM vw_Employee_Salaries")) {
 
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();

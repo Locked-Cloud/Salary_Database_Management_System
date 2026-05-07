@@ -48,30 +48,44 @@ public class Signup extends JFrame {
         backButton = new JButton("Back to Login");
 
         // Layout Components
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         panel.add(titleLabel, gbc);
 
-        gbc.gridwidth = 1; gbc.gridy++;
+        gbc.gridwidth = 1;
+        gbc.gridy++;
         panel.add(new JLabel("Full Name:"), gbc);
-        gbc.gridx = 1; panel.add(nameField, gbc);
+        gbc.gridx = 1;
+        panel.add(nameField, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridy++;
         panel.add(new JLabel("Department:"), gbc);
-        gbc.gridx = 1; panel.add(deptField, gbc);
+        gbc.gridx = 1;
+        panel.add(deptField, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridy++;
         panel.add(new JLabel("Email:"), gbc);
-        gbc.gridx = 1; panel.add(emailField, gbc);
+        gbc.gridx = 1;
+        panel.add(emailField, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridy++;
         panel.add(new JLabel("Username:"), gbc);
-        gbc.gridx = 1; panel.add(usernameField, gbc);
+        gbc.gridx = 1;
+        panel.add(usernameField, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridy++;
         panel.add(new JLabel("Password:"), gbc);
-        gbc.gridx = 1; panel.add(passwordField, gbc);
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
         panel.add(submitButton, gbc);
 
         gbc.gridy++;
@@ -95,14 +109,15 @@ public class Signup extends JFrame {
         String password = String.valueOf(passwordField.getPassword());
 
         if (name.isEmpty() || dept.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "All fields are required!", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "All fields are required!", "Validation Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         String sql = "INSERT INTO Employees (full_name, department, email, username, password) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, name);
             stmt.setString(2, dept);
@@ -118,7 +133,8 @@ public class Signup extends JFrame {
             }
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }

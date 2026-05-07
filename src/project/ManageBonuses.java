@@ -111,7 +111,7 @@ public class ManageBonuses extends JFrame {
         // We will just show Bonuses for simplicity. Alternatively, we could show Deductions based on a toggle.
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM Bonuses")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM vw_Bonus_Details")) {
 
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();

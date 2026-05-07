@@ -14,8 +14,7 @@ public class Login extends JDialog {
     private JPanel loginPanel;
 
     // DATABASE CONNECTION
-    private static final String DB_URL =
-            "jdbc:mysql://localhost:3306/salaryman";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/salaryman";
 
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "root";
@@ -38,8 +37,7 @@ public class Login extends JDialog {
 
         loginPanel = new JPanel(new GridBagLayout());
         loginPanel.setBorder(
-                BorderFactory.createEmptyBorder(20, 20, 20, 20)
-        );
+                BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -113,8 +111,7 @@ public class Login extends JDialog {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Please enter username and password"
-            );
+                    "Please enter username and password");
 
             return;
         }
@@ -124,8 +121,7 @@ public class Login extends JDialog {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Admin Login Successful"
-            );
+                    "Admin Login Successful");
 
             dispose();
 
@@ -139,15 +135,13 @@ public class Login extends JDialog {
             if (empId != -1) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Employee Login Successful"
-                );
+                        "Employee Login Successful");
                 dispose();
                 new EmployeeDashboard(empId);
             } else {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Invalid Username or Password"
-                );
+                        "Invalid Username or Password");
             }
         }
     }
@@ -155,22 +149,17 @@ public class Login extends JDialog {
     // ADMIN AUTHENTICATION
     private boolean authenticateAdmin(
             String username,
-            String password
-    ) {
+            String password) {
 
-        String sql =
-                "SELECT * FROM admins WHERE username=? AND password=?";
+        String sql = "SELECT * FROM admins WHERE username=? AND password=?";
 
         try (
                 Connection conn = DriverManager.getConnection(
                         DB_URL,
                         DB_USERNAME,
-                        DB_PASSWORD
-                );
+                        DB_PASSWORD);
 
-                PreparedStatement stmt =
-                        conn.prepareStatement(sql)
-        ) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -185,8 +174,7 @@ public class Login extends JDialog {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Database Error:\n" + ex.getMessage()
-            );
+                    "Database Error:\n" + ex.getMessage());
         }
 
         return false;
@@ -195,22 +183,17 @@ public class Login extends JDialog {
     // EMPLOYEE AUTHENTICATION
     private int authenticateEmployee(
             String username,
-            String password
-    ) {
+            String password) {
 
-        String sql =
-                "SELECT employee_id FROM Employees WHERE username=? AND password=?";
+        String sql = "SELECT employee_id FROM Employees WHERE username=? AND password=?";
 
         try (
                 Connection conn = DriverManager.getConnection(
                         DB_URL,
                         DB_USERNAME,
-                        DB_PASSWORD
-                );
+                        DB_PASSWORD);
 
-                PreparedStatement stmt =
-                        conn.prepareStatement(sql)
-        ) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -227,8 +210,7 @@ public class Login extends JDialog {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Database Error:\n" + ex.getMessage()
-            );
+                    "Database Error:\n" + ex.getMessage());
         }
 
         return -1;
@@ -245,12 +227,10 @@ public class Login extends JDialog {
         button.setFocusPainted(false);
 
         button.setFont(
-                new Font("Arial", Font.BOLD, 14)
-        );
+                new Font("Arial", Font.BOLD, 14));
 
         button.setCursor(
-                new Cursor(Cursor.HAND_CURSOR)
-        );
+                new Cursor(Cursor.HAND_CURSOR));
 
         return button;
     }

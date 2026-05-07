@@ -75,20 +75,13 @@ public class AdminDashboard extends JFrame {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
              Statement stmt = conn.createStatement()) {
 
-            // Total Employees
-            ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) AS total FROM Employees");
-            if (rs1.next()) empLabel.setText("Total Employees: " + rs1.getInt("total"));
-
-            // Total Payroll Dispensed
-            ResultSet rs2 = stmt.executeQuery("SELECT SUM(net_salary) AS total_payroll FROM Payroll");
-            if (rs2.next()) {
-                double total = rs2.getDouble("total_payroll");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM vw_Admin_Analytics");
+            if (rs.next()) {
+                empLabel.setText("Total Employees: " + rs.getInt("total_employees"));
+                double total = rs.getDouble("total_payroll");
                 payrollLabel.setText(String.format("Total Payroll Dispensed: $%.2f", total));
+                bonusLabel.setText("Total Bonuses Granted: " + rs.getInt("total_bonuses"));
             }
-
-            // Total Bonuses
-            ResultSet rs3 = stmt.executeQuery("SELECT COUNT(*) AS total_bonuses FROM Bonuses");
-            if (rs3.next()) bonusLabel.setText("Total Bonuses Granted: " + rs3.getInt("total_bonuses"));
 
         } catch (SQLException ex) {
             empLabel.setText("Total Employees: Error");

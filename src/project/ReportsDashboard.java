@@ -52,17 +52,17 @@ public class ReportsDashboard extends JFrame {
             int index = querySelector.getSelectedIndex();
             String sql = "";
             switch (index) {
-                case 0: sql = "SELECT e.full_name, s.base_salary FROM Employees e JOIN SalaryStructures s ON e.employee_id = s.employee_id"; break;
-                case 1: sql = "SELECT * FROM Payroll WHERE MONTH(payroll_date) = 3"; break;
-                case 2: sql = "SELECT e.employee_id, e.full_name, COUNT(b.bonus_id) AS bonus_count FROM Employees e LEFT JOIN Bonuses b ON e.employee_id = b.employee_id GROUP BY e.employee_id, e.full_name"; break;
-                case 3: sql = "SELECT e.full_name, e.department, s.base_salary FROM Employees e JOIN SalaryStructures s ON e.employee_id = s.employee_id WHERE s.base_salary > 60000"; break;
-                case 4: sql = "SELECT e.full_name, d.deduction_type, d.deduction_amount, b.bonus_amount, b.reason FROM Employees e LEFT JOIN Deductions d ON e.employee_id = d.employee_id LEFT JOIN Bonuses b ON e.employee_id = b.employee_id"; break;
-                case 5: sql = "SELECT e.full_name, b.bonus_amount, b.reason FROM Employees e JOIN Bonuses b ON e.employee_id = b.employee_id WHERE b.bonus_amount > 500"; break;
-                case 6: sql = "SELECT e.full_name, s.base_salary, s.tax_bracket, s.tax_amount, s.net_after_tax FROM Employees e JOIN SalaryStructures s ON e.employee_id = s.employee_id"; break;
-                case 7: sql = "SELECT e.full_name, c.salary_amount, c.change_type, c.effective_date FROM Employees e JOIN CompensationHistory c ON e.employee_id = c.employee_id WHERE YEAR(c.effective_date) = 2025"; break;
-                case 8: sql = "SELECT e.full_name, s.base_salary FROM Employees e JOIN SalaryStructures s ON e.employee_id = s.employee_id WHERE s.base_salary > (SELECT AVG(base_salary) FROM SalaryStructures)"; break;
-                case 9: sql = "SELECT e.full_name, b.bonus_amount FROM Employees e JOIN Bonuses b ON e.employee_id = b.employee_id WHERE b.bonus_amount > (SELECT AVG(bonus_amount) FROM Bonuses)"; break;
-                case 10: sql = "SELECT e.full_name, s.base_salary, CASE WHEN s.base_salary >= 80000 THEN 'Senior' WHEN s.base_salary >= 40000 THEN 'Mid-Level' ELSE 'Junior' END AS Employee_Level FROM Employees e JOIN SalaryStructures s ON e.employee_id = s.employee_id"; break;
+                case 0: sql = "SELECT full_name, base_salary FROM vw_Employee_Salaries"; break;
+                case 1: sql = "SELECT * FROM vw_March_Payroll"; break;
+                case 2: sql = "SELECT * FROM vw_Employee_Bonus_Count"; break;
+                case 3: sql = "SELECT * FROM vw_High_Salary_Employees"; break;
+                case 4: sql = "SELECT * FROM vw_Comprehensive_Compensation"; break;
+                case 5: sql = "SELECT * FROM vw_High_Bonus_Employees"; break;
+                case 6: sql = "SELECT full_name, base_salary, tax_bracket, tax_amount, net_after_tax FROM vw_Employee_Salaries"; break;
+                case 7: sql = "SELECT * FROM vw_Compensation_History_2025"; break;
+                case 8: sql = "SELECT * FROM vw_Above_Average_Salary"; break;
+                case 9: sql = "SELECT * FROM vw_Above_Average_Bonus"; break;
+                case 10: sql = "SELECT * FROM vw_Employee_Classifications"; break;
             }
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);

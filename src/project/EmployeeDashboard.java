@@ -44,7 +44,7 @@ public class EmployeeDashboard extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        salaryBtn.addActionListener(e -> fetchEmployeeData("SELECT * FROM SalaryStructures WHERE employee_id = ?"));
+        salaryBtn.addActionListener(e -> fetchEmployeeData("SELECT * FROM vw_Employee_Salaries WHERE employee_id = ?"));
         payrollBtn.addActionListener(e -> fetchEmployeeData("SELECT * FROM Payroll WHERE employee_id = ?"));
     }
 
