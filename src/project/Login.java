@@ -15,20 +15,18 @@ public class Login extends JDialog {
 
     // DATABASE CONNECTION
     private static final String DB_URL =
-            "jdbc:mysql://localhost:3306/SalaryMan";
+            "jdbc:mysql://localhost:3306/salaryman";
 
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "root";
 
     public Login(JFrame parent) {
 
-        super(parent);
+        super(parent, true);
 
         setTitle("Salary Management System - Login");
         setSize(500, 350);
-        setMinimumSize(new Dimension(500, 350));
         setLocationRelativeTo(parent);
-        setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initializeComponents();
@@ -39,7 +37,9 @@ public class Login extends JDialog {
     private void initializeComponents() {
 
         loginPanel = new JPanel(new GridBagLayout());
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        loginPanel.setBorder(
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        );
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -52,18 +52,18 @@ public class Login extends JDialog {
         loginButton = createModernButton("Login");
         signupButton = createModernButton("Sign Up");
 
+        gbc.insets = new Insets(10, 10, 10, 10);
+
         // TITLE
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        gbc.insets = new Insets(10,10,20,10);
-
         loginPanel.add(titleLabel, gbc);
 
         // USERNAME LABEL
         gbc.gridy++;
         gbc.gridwidth = 1;
-
+        gbc.gridx = 0;
         loginPanel.add(new JLabel("Username:"), gbc);
 
         // USERNAME FIELD
@@ -73,7 +73,6 @@ public class Login extends JDialog {
         // PASSWORD LABEL
         gbc.gridx = 0;
         gbc.gridy++;
-
         loginPanel.add(new JLabel("Password:"), gbc);
 
         // PASSWORD FIELD
@@ -85,107 +84,89 @@ public class Login extends JDialog {
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
         loginPanel.add(loginButton, gbc);
 
         // SIGNUP BUTTON
         gbc.gridy++;
-
         loginPanel.add(signupButton, gbc);
 
-        // LOGIN ACTION
+        // ACTIONS
         loginButton.addActionListener(this::loginAction);
 
-        // SIGNUP ACTION
         signupButton.addActionListener(e -> {
 
             dispose();
 
-            Signup signup = new Signup();
-            signup.setVisible(true);
+            new Signup();
         });
 
         setContentPane(loginPanel);
     }
 
-    // LOGIN BUTTON ACTION
+    // LOGIN ACTION
     private void loginAction(ActionEvent e) {
 
         String username = usernameField.getText().trim();
         String password = String.valueOf(passwordField.getPassword());
 
-        // VALIDATION
-        if(username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty()) {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Please enter username and password",
-                    "Validation Error",
-                    JOptionPane.ERROR_MESSAGE
+                    "Please enter username and password"
             );
 
             return;
         }
 
         // ADMIN LOGIN
-        if(authenticateAdmin(username, password)) {
+        if (authenticateAdmin(username, password)) {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Admin Login Successful",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
+                    "Admin Login Successful"
             );
 
             dispose();
 
-            // OPEN ADMIN DASHBOARD
             new AdminDashboard();
 
         }
 
         // EMPLOYEE LOGIN
-        else if(authenticateEmployee(username, password)) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Employee Login Successful",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-            dispose();
-
-            // OPEN EMPLOYEE DASHBOARD
-            new EmployeeDashboard();
-
-        }
-
-        // INVALID LOGIN
         else {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Invalid Username or Password",
-                    "Login Failed",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            int empId = authenticateEmployee(username, password);
+            if (empId != -1) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Employee Login Successful"
+                );
+                dispose();
+                new EmployeeDashboard(empId);
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Invalid Username or Password"
+                );
+            }
         }
     }
 
     // ADMIN AUTHENTICATION
-    private boolean authenticateAdmin(String username, String password) {
+    private boolean authenticateAdmin(
+            String username,
+            String password
+    ) {
 
         String sql =
-                "SELECT * FROM Admins WHERE username=? AND password=?";
+                "SELECT * FROM admins WHERE username=? AND password=?";
 
         try (
-                Connection conn =
-                        DriverManager.getConnection(
-                                DB_URL,
-                                DB_USERNAME,
-                                DB_PASSWORD
-                        );
+                Connection conn = DriverManager.getConnection(
+                        DB_URL,
+                        DB_USERNAME,
+                        DB_PASSWORD
+                );
 
                 PreparedStatement stmt =
                         conn.prepareStatement(sql)
@@ -198,35 +179,34 @@ public class Login extends JDialog {
 
             return rs.next();
 
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
+
+            ex.printStackTrace();
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Database Error: " + e.getMessage()
+                    "Database Error:\n" + ex.getMessage()
             );
-
-            e.printStackTrace();
         }
 
         return false;
     }
 
     // EMPLOYEE AUTHENTICATION
-    private boolean authenticateEmployee(
+    private int authenticateEmployee(
             String username,
             String password
     ) {
 
         String sql =
-                "SELECT * FROM Employees WHERE username=? AND password=?";
+                "SELECT employee_id FROM Employees WHERE username=? AND password=?";
 
         try (
-                Connection conn =
-                        DriverManager.getConnection(
-                                DB_URL,
-                                DB_USERNAME,
-                                DB_PASSWORD
-                        );
+                Connection conn = DriverManager.getConnection(
+                        DB_URL,
+                        DB_USERNAME,
+                        DB_PASSWORD
+                );
 
                 PreparedStatement stmt =
                         conn.prepareStatement(sql)
@@ -237,22 +217,24 @@ public class Login extends JDialog {
 
             ResultSet rs = stmt.executeQuery();
 
-            return rs.next();
+            if (rs.next()) {
+                return rs.getInt("employee_id");
+            }
 
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
+
+            ex.printStackTrace();
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Database Error: " + e.getMessage()
+                    "Database Error:\n" + ex.getMessage()
             );
-
-            e.printStackTrace();
         }
 
-        return false;
+        return -1;
     }
 
-    // MODERN BUTTON DESIGN
+    // BUTTON DESIGN
     private JButton createModernButton(String text) {
 
         JButton button = new JButton(text);
@@ -262,30 +244,24 @@ public class Login extends JDialog {
 
         button.setFocusPainted(false);
 
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(
+                new Font("Arial", Font.BOLD, 14)
+        );
 
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        button.setBorder(
-                BorderFactory.createEmptyBorder(
-                        10,
-                        20,
-                        10,
-                        20
-                )
+        button.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
         );
 
         return button;
     }
 
-    // MAIN METHOD
+    // MAIN
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
 
-            Login login = new Login(null);
+            new Login(null);
 
-            login.setVisible(true);
         });
     }
 }
