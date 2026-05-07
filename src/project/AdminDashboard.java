@@ -1,2 +1,4 @@
-package project;public class AdminDashboard {
+package project;
+
+public class AdminDashboard {
 }
