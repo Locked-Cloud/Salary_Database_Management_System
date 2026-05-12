@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS CompensationHistory (
 );
 
 -- Insert Dummy Data for Testing Login (Passwords are hashed 'admin123' and 'emp123')
-INSERT INTO Admins (username, password) VALUES ('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
-INSERT INTO Employees (full_name, department, email, username, password) VALUES ('John Doe', 'IT', 'john@test.com', 'john', '33e387c9dc00ff51ec946b8ba268c17fc80e92fdd77dfed98c4d293881458e08');
-INSERT INTO Employees (full_name, department, email, username, password) VALUES ('Jane Smith', 'HR', 'jane@test.com', 'jane', '33e387c9dc00ff51ec946b8ba268c17fc80e92fdd77dfed98c4d293881458e08');
+INSERT INTO Admins (username, password) VALUES ('admin', 'admin123');
+INSERT INTO Employees (full_name, department, email, username, password) VALUES ('John Doe', 'IT', 'john@test.com', 'john', 'emp123');
+INSERT INTO Employees (full_name, department, email, username, password) VALUES ('Jane Smith', 'HR', 'jane@test.com', 'jane', 'emp123');
 
 -- Insert Dummy Data for Queries
 INSERT INTO SalaryStructures (employee_id, base_salary, pay_grade, tax_bracket, tax_amount, net_after_tax) VALUES 
